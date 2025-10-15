@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificação Programada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        input[type="datetime-local"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Agendar Notificação</h1>
+        <p>Escolha o horário para a notificação:</p>
+        <input type="datetime-local" id="datetime">
+        <button onclick="agendarNotificacao()">Agendar Notificação</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        function agendarNotificacao() {
+            const datetimeInput = document.getElementById('datetime').value;
+            const messageDiv = document.getElementById('message');
+            
+            if (!datetimeInput) {
+                messageDiv.textContent = 'Por favor, escolha uma data e hora.';
+                return;
+            }
+
+            const dataEscolhida = new Date(datetimeInput);
+            const agora = new Date();
+            const tempoEspera = dataEscolhida - agora;
+
+            if (tempoEspera <= 0) {
+                messageDiv.textContent = 'O horário escolhido já passou. Escolha um horário no futuro.';
+                return;
+            }
+
+            // Exibe mensagem de sucesso
+            messageDiv.textContent = `Notificação agendada para ${dataEscolhida.toLocaleString()}`;
+
+            // Agendar a notificação
+            setTimeout(() => {
+                if (Notification.permission === 'granted') {
+                    new Notification('Hora da sua notificação!', {
+                        body: 'Este é o momento que você agendou.',
+                        icon: 'https://via.placeholder.com/100'
+                    });
+                } else {
+                    // Solicitar permissão de notificação se necessário
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification('Hora da sua notificação!', {
+                                body: 'Este é o momento que você agendou.',
+                                icon: 'https://via.placeholder.com/100'
+                            });
+                        }
+                    });
+                }
+            }, tempoEspera);
+        }
+    </script>
+
+</body>
+</html>
