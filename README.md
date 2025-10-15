@@ -57,10 +57,29 @@ Claro! Vou te dar um exemplo bem simples de um arquivo único (HTML) que usa Jav
         <p>Escolha o horário para a notificação:</p>
         <input type="datetime-local" id="datetime">
         <button onclick="agendarNotificacao()">Agendar Notificação</button>
+
         <div class="message" id="message"></div>
+
+        <button onclick="solicitarPermissao()">Solicitar Permissão de Notificação</button>
     </div>
 
     <script>
+        // Função para solicitar permissão de notificação
+        function solicitarPermissao() {
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        alert("Permissão de notificação concedida!");
+                    } else {
+                        alert("Permissão de notificação negada.");
+                    }
+                });
+            } else {
+                alert("Permissão de notificação já concedida.");
+            }
+        }
+
+        // Função para agendar a notificação
         function agendarNotificacao() {
             const datetimeInput = document.getElementById('datetime').value;
             const messageDiv = document.getElementById('message');
@@ -90,15 +109,7 @@ Claro! Vou te dar um exemplo bem simples de um arquivo único (HTML) que usa Jav
                         icon: 'https://via.placeholder.com/100'
                     });
                 } else {
-                    // Solicitar permissão de notificação se necessário
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification('Hora da sua notificação!', {
-                                body: 'Este é o momento que você agendou.',
-                                icon: 'https://via.placeholder.com/100'
-                            });
-                        }
-                    });
+                    alert("Você precisa permitir as notificações para receber.");
                 }
             }, tempoEspera);
         }
@@ -106,6 +117,7 @@ Claro! Vou te dar um exemplo bem simples de um arquivo único (HTML) que usa Jav
 
 </body>
 </html>
+
 ```
 
 ### Explicação:
