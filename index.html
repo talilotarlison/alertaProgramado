@@ -85,9 +85,10 @@
             }
 
             const dataEscolhida = new Date(datetimeInput);
+            console.log(dataEscolhida)
             const agora = new Date();
             const tempoEspera = dataEscolhida - agora;
-
+            console.log(agora, tempoEspera)
             if (tempoEspera <= 0) {
                 messageDiv.textContent = 'O horário escolhido já passou. Escolha um horário no futuro.';
                 return;
