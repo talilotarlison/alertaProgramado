@@ -99,6 +99,7 @@
             // Agendar a notificação
             setTimeout(() => {
                 if (Notification.permission === 'granted') {
+                    // Garantir que a notificação será disparada no contexto correto
                     new Notification('Hora da sua notificação!', {
                         body: 'Este é o momento que você agendou.',
                         icon: 'https://via.placeholder.com/100'
