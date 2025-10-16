@@ -93,22 +93,44 @@
                 return;
             }
 
+            // Salvar no localStorage a data e hora agendada
+            localStorage.setItem('notificacaoData', dataEscolhida.toISOString());
+
             // Exibe mensagem de sucesso
             messageDiv.textContent = `Notificação agendada para ${dataEscolhida.toLocaleString()}`;
 
             // Agendar a notificação
-            setTimeout(() => {
+            verificarNotificacao();
+        }
+
+        // Função para verificar se é hora de enviar a notificação
+        function verificarNotificacao() {
+            // Recuperar a data agendada do localStorage
+            const dataAgendada = localStorage.getItem('notificacaoData');
+            if (!dataAgendada) {
+                return;
+            }
+
+            const dataEscolhida = new Date(dataAgendada);
+            const agora = new Date();
+            const tempoEspera = dataEscolhida - agora;
+
+            if (tempoEspera <= 0) {
                 if (Notification.permission === 'granted') {
-                    // Garantir que a notificação será disparada no contexto correto
                     new Notification('Hora da sua notificação!', {
                         body: 'Este é o momento que você agendou.',
                         icon: 'https://via.placeholder.com/100'
                     });
-                } else {
-                    alert("Você precisa permitir as notificações para receber.");
                 }
-            }, tempoEspera);
+                localStorage.removeItem('notificacaoData'); // Limpar após notificação
+            } else {
+                // Continuar verificando
+                setTimeout(verificarNotificacao, tempoEspera);
+            }
         }
+
+        // Iniciar a verificação se a página for recarregada
+        document.addEventListener('DOMContentLoaded', verificarNotificacao);
     </script>
 
 </body>
